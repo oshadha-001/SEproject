@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head>
+    <title>Update Stock</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Light Theme (Default) */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e9ecef;
+            --card-bg: #1e1e1e;
+            --border-color: #444;
+        }
+
+        /* Apply Theme Variables */
+        body {
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-color) !important;
+        }
+
+        .form-control {
+            background-color: var(--card-bg) !important;
+            color: var(--text-color) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        .form-control:focus {
+            background-color: var(--card-bg) !important;
+            color: var(--text-color) !important;
+            border-color: #86b7fe !important;
+        }
+
+        .form-text {
+            color: #6c757d !important;
+        }
+    </style>
+</head>
+<body class="container mt-5">
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Update Stock Quantity</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{'/inventory/update-stock/' + ${book.id}}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Book Title</label>
+                        <input type="text" class="form-control" th:value="${book.title}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Current Quantity</label>
+                        <input type="number" class="form-control" th:value="${book.quantity}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">New Quantity</label>
+                        <input type="number" name="quantity" class="form-control"
+                               th:value="${book.quantity}" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Minimum Stock Level</label>
+                        <input type="number" class="form-control" th:value="${book.minStockLevel}" readonly>
+                        <div class="form-text">Alert will trigger when stock falls below this level</div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Update Stock</button>
+                        <a href="/inventory/dashboard" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Theme Switcher Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load saved theme
+        const savedTheme = localStorage.getItem('preferred-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Update all links to maintain theme
+        updateLinksWithTheme(savedTheme);
+    });
+
+    function updateLinksWithTheme(theme) {
+        document.querySelectorAll('a').forEach(link => {
+            const url = new URL(link.href, window.location.origin);
+            if (!url.searchParams.has('theme')) {
+                url.searchParams.set('theme', theme);
+                link.href = url.toString();
+            }
+        });
+    }
+</script>
+</body>
+</html>

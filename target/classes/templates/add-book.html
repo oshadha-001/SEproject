@@ -1,73 +1,286 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light">
 <head>
     <title>Add Book</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Light Theme (Default) */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+            --navbar-bg: #343a40;
+            --table-header-bg: #343a40;
+            --table-header-color: #ffffff;
+            --table-hover: #f8f9fa;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e9ecef;
+            --card-bg: #1e1e1e;
+            --border-color: #444;
+            --navbar-bg: #0d1117;
+            --table-header-bg: #2d3748;
+            --table-header-color: #e9ecef;
+            --table-hover: #2d3748;
+        }
+
+        /* Apply Theme Variables */
+        body {
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-color) !important;
+        }
+
+        .navbar-dark {
+            background-color: var(--navbar-bg) !important;
+        }
+
+        .table {
+            color: var(--text-color) !important;
+        }
+
+        .table-dark {
+            background-color: var(--table-header-bg) !important;
+            color: var(--table-header-color) !important;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: var(--table-hover) !important;
+            color: var(--text-color) !important;
+        }
+
+        .form-control, .form-select {
+            background-color: var(--card-bg) !important;
+            color: var(--text-color) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--card-bg) !important;
+            color: var(--text-color) !important;
+            border-color: #86b7fe !important;
+        }
+
+        .alert {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-color) !important;
+        }
+
+        /* Ensure text is readable */
+        .text-muted {
+            color: #6c757d !important;
+        }
+
+        /* Badge colors should remain vibrant */
+        .badge {
+            color: white !important;
+        }
+    </style>
 </head>
 <body class="container mt-5">
 
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">BookStore Inventory</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/inventory/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/inventory/add">Add Book</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/inventory/low-stock">Low Stock Report</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <!-- Theme Switcher -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="themeSwitcher">
+                        ☀️ Light
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item theme-option" href="#" data-theme="light">☀️ Light Theme</a></li>
+                        <li><a class="dropdown-item theme-option" href="#" data-theme="dark">🌙 Dark Theme</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <h1>Add New Book</h1>
 
-<!-- Book Form -->
-<form th:action="@{/books/add}" method="post" th:object="${book}" class="mb-4">
-    <div class="mb-3">
-        <label class="form-label">Title</label>
-        <input type="text" th:field="*{title}" class="form-control" placeholder="Enter book title" required>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Author</label>
-        <input type="text" th:field="*{author}" class="form-control" placeholder="Enter author name" required>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Price</label>
-        <input type="number" step="0.01" th:field="*{price}" class="form-control" placeholder="Enter price" required>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Quantity</label>
-        <input type="number" th:field="*{quantity}" class="form-control" placeholder="Enter quantity" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
-
-<!-- Success Popup -->
+<!-- Success/Error Messages -->
 <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
     <span th:text="${successMessage}"></span>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
+<div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span th:text="${errorMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<!-- Book Form -->
+<form th:action="@{/inventory/add}" method="post" th:object="${book}" class="mb-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Title *</label>
+                <input type="text" th:field="*{title}" class="form-control" placeholder="Enter book title" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Author *</label>
+                <input type="text" th:field="*{author}" class="form-control" placeholder="Enter author name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">ISBN *</label>
+                <input type="text" th:field="*{isbn}" class="form-control" placeholder="Enter ISBN" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+                <input type="text" th:field="*{category}" class="form-control" placeholder="Enter category">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Price *</label>
+                <input type="number" step="0.01" th:field="*{price}" class="form-control" placeholder="Enter price" required min="0">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Quantity *</label>
+                <input type="number" th:field="*{quantity}" class="form-control" placeholder="Enter quantity" required min="0">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Minimum Stock Level</label>
+                <input type="number" th:field="*{minStockLevel}" class="form-control" placeholder="Enter minimum stock level" min="1" value="10">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea th:field="*{description}" class="form-control" placeholder="Enter book description" rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="submit" class="btn btn-primary me-md-2">Save Book</button>
+        <a href="/inventory/dashboard" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
 <!-- Book Table -->
 <div class="mt-5">
     <h2>All Books in Inventory</h2>
-    <table class="table table-bordered" th:if="${books != null and !books.isEmpty()}">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="b : ${books}">
-            <td th:text="${b.id}"></td>
-            <td th:text="${b.title}"></td>
-            <td th:text="${b.author}"></td>
-            <td th:text="${b.price}"></td>
-            <td th:text="${b.quantity}"></td>
-            <td>
-                <a th:href="@{'/books/delete/' + ${b.id}}" class="btn btn-danger btn-sm"
-                   onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
+    <div th:if="${books != null and !books.isEmpty()}">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Stock Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${books}" th:classappend="${b.lowStock} ? 'table-warning'">
+                <td th:text="${b.id}"></td>
+                <td th:text="${b.title}"></td>
+                <td th:text="${b.author}"></td>
+                <td th:text="${b.isbn}"></td>
+                <td th:text="${b.category}"></td>
+                <td th:text="'$' + ${#numbers.formatDecimal(b.price, 1, 2)}"></td>
+                <td th:text="${b.quantity}"></td>
+                <td>
+                    <span th:if="${b.lowStock}" class="badge bg-warning">Low Stock</span>
+                    <span th:unless="${b.lowStock}" class="badge bg-success">In Stock</span>
+                </td>
+                <td>
+                    <a th:href="@{'/inventory/update-stock/' + ${b.id}}" class="btn btn-sm btn-outline-primary">Update Stock</a>
+                    <a th:href="@{'/inventory/delete/' + ${b.id}}"
+                       class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div th:if="${books == null or books.isEmpty()}" class="alert alert-info">
-        No books available.
+        No books available in inventory.
     </div>
 </div>
 
+<script>
+    // Theme Switcher Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load saved theme
+        const savedTheme = localStorage.getItem('preferred-theme') || 'light';
+        setTheme(savedTheme);
+
+        // Theme switcher event listeners
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                const theme = this.getAttribute('data-theme');
+                setTheme(theme);
+            });
+        });
+    });
+
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('preferred-theme', theme);
+
+        // Update theme switcher text
+        const themeSwitcher = document.getElementById('themeSwitcher');
+        if (themeSwitcher) {
+            themeSwitcher.innerHTML = theme === 'dark' ? '🌙 Dark' : '☀️ Light';
+        }
+
+        // Update all links to maintain theme
+        updateLinksWithTheme(theme);
+    }
+
+    function updateLinksWithTheme(theme) {
+        document.querySelectorAll('a:not(.theme-option)').forEach(link => {
+            const url = new URL(link.href, window.location.origin);
+            if (!url.searchParams.has('theme')) {
+                url.searchParams.set('theme', theme);
+                link.href = url.toString();
+            }
+        });
+    }
+</script>
 </body>
 </html>

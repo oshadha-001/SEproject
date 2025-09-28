@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head>
+    <title>Edit Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Light Theme (Default) */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e9ecef;
+            --card-bg: #1e1e1e;
+            --border-color: #444;
+        }
+
+        /* Apply Theme Variables */
+        body {
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-color) !important;
+        }
+
+        .form-control {
+            background-color: var(--card-bg) !important;
+            color: var(--text-color) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        .form-control:focus {
+            background-color: var(--card-bg) !important;
+            color: var(--text-color) !important;
+            border-color: #86b7fe !important;
+        }
+    </style>
+</head>
+<body class="container mt-5">
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Edit Book</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{'/inventory/update/' + ${book.id}}" method="post" th:object="${book}">
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" th:field="*{title}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Author</label>
+                        <input type="text" th:field="*{author}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ISBN</label>
+                        <input type="text" th:field="*{isbn}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <input type="text" th:field="*{category}" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Price</label>
+                        <input type="number" step="0.01" th:field="*{price}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" th:field="*{quantity}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Minimum Stock Level</label>
+                        <input type="number" th:field="*{minStockLevel}" class="form-control">
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Update Book</button>
+                        <a href="/inventory/dashboard" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Theme Switcher Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load saved theme
+        const savedTheme = localStorage.getItem('preferred-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Update all links to maintain theme
+        updateLinksWithTheme(savedTheme);
+    });
+
+    function updateLinksWithTheme(theme) {
+        document.querySelectorAll('a').forEach(link => {
+            const url = new URL(link.href, window.location.origin);
+            if (!url.searchParams.has('theme')) {
+                url.searchParams.set('theme', theme);
+                link.href = url.toString();
+            }
+        });
+    }
+</script>
+</body>
+</html>
