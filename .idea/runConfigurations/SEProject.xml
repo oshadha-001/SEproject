@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="SEProject" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="GTPproject" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.gtp.gtpproject.GtPprojectApplication" />
-    <method v="2">
-      <option name="Make" enabled="true" />
-    </method>
-  </configuration>
-</component>
