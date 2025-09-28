@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+<<<<<<< Updated upstream
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/0e12fe35-5720-4c9f-b712-9dae4a371f53/console.sql" dialect="MySQL" />
+=======
+>>>>>>> Stashed changes
     <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>
