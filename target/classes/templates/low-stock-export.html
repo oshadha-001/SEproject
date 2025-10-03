@@ -1,76 +1,124 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" data-theme="light">
 <head>
-    <title>Low Stock Report - Export</title>
+    <title>Low Stock Report Export - Book Nest Lanka</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         @media print {
             .no-print { display: none !important; }
             .container { max-width: 100% !important; }
             .card { border: 1px solid #000 !important; }
             .table { font-size: 12px; }
+            .report-header { background: #f8f9fa !important; color: #000 !important; }
         }
 
-        /* Light Theme (Default) */
         :root {
-            --bg-color: #ffffff;
-            --text-color: #212529;
-            --card-bg: #ffffff;
-            --border-color: #dee2e6;
+            --primary-color: #4a6fa5;
+            --secondary-color: #6d98ba;
         }
 
-        /* Dark Theme */
-        [data-theme="dark"] {
-            --bg-color: #121212;
-            --text-color: #e9ecef;
-            --card-bg: #1e1e1e;
-            --border-color: #444;
+        * {
+            font-family: 'Poppins', sans-serif;
         }
 
-        /* Apply Theme Variables */
         body {
-            background-color: var(--bg-color) !important;
-            color: var(--text-color) !important;
-            transition: all 0.3s ease;
+            background-color: #f5f7fa;
+            color: #333;
         }
 
+        /* Logo and Branding */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        /* Cards */
         .card {
-            background-color: var(--card-bg) !important;
-            border-color: var(--border-color) !important;
-            color: var(--text-color) !important;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
         }
 
+        /* Report Header */
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        /* Tables */
         .table {
-            color: var(--text-color) !important;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        .table-dark {
-            background-color: #343a40 !important;
-            color: #ffffff !important;
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            font-weight: 600;
         }
 
         .critical-item { background-color: #ffe6e6 !important; }
         .low-stock-item { background-color: #fff3cd !important; }
-        .report-header { background-color: #f8f9fa; padding: 20px; border: 1px solid #dee2e6; }
 
-        [data-theme="dark"] .report-header {
-            background-color: #2d3748;
-            border-color: #4a5568;
+        /* Buttons */
+        .btn {
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
         }
     </style>
 </head>
 <body class="container mt-4">
 
 <!-- Report Header -->
-<div class="report-header mb-4">
+<div class="report-header">
     <div class="row">
         <div class="col-8">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-book"></i>
+                </div>
+                <span class="brand-name text-white">Book Nest Lanka</span>
+            </div>
             <h2 th:text="${reportTitle}">Low Stock Report</h2>
             <p class="mb-0">BookStore Inventory Management System</p>
             <p class="mb-0">Generated on: <span th:text="${#dates.format(#dates.createNow(), 'MMMM dd, yyyy HH:mm')}"></span></p>
         </div>
         <div class="col-4 text-end">
-            <button class="btn btn-primary no-print" onclick="window.print()">Print Report</button>
+            <button class="btn btn-light no-print" onclick="window.print()">
+                <i class="fas fa-print me-1"></i> Print Report
+            </button>
         </div>
     </div>
 </div>
@@ -146,29 +194,17 @@
 
 <!-- Back Button -->
 <div class="no-print text-center mt-4">
-    <a href="/inventory/low-stock" class="btn btn-secondary">Back to Low Stock Report</a>
+    <a href="/inventory/low-stock" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Back to Low Stock Report
+    </a>
 </div>
 
 <script>
-    // Theme Switcher Functionality
+    // Auto-print when page loads (optional)
     document.addEventListener('DOMContentLoaded', function() {
-        // Load saved theme
-        const savedTheme = localStorage.getItem('preferred-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        // Update all links to maintain theme
-        updateLinksWithTheme(savedTheme);
+        // Uncomment the line below to auto-print when page loads
+        // window.print();
     });
-
-    function updateLinksWithTheme(theme) {
-        document.querySelectorAll('a').forEach(link => {
-            const url = new URL(link.href, window.location.origin);
-            if (!url.searchParams.has('theme')) {
-                url.searchParams.set('theme', theme);
-                link.href = url.toString();
-            }
-        });
-    }
 </script>
 </body>
 </html>
