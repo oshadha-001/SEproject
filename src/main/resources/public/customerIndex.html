@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - BookNest</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B7355;
+            --secondary: #2C5530;
+            --accent: #C19A6B;
+            --light: #F8F4E9;
+            --dark: #2D2A26;
+            --text: #3C3C3C;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-tab.active {
+            background: rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .cart-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 100px auto 40px;
+            padding: 0 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h2 {
+            font-size: 2.2rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-family: 'Crimson Text', serif;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border-left: 4px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        /* Books Grid */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .book-stock {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .book-info {
+            padding: 20px;
+        }
+
+        .book-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            line-height: 1.3;
+        }
+
+        .book-author {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .book-genre {
+            background: var(--light);
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .book-price {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .add-to-cart:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .add-to-cart:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Cart Styles */
+        .cart-items {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            gap: 20px;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 100px;
+            background: var(--light);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-author {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .quantity-btn:hover {
+            background: var(--light);
+            border-color: var(--primary);
+        }
+
+        .quantity {
+            font-weight: 600;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .remove-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .remove-btn:hover {
+            background: #ff3742;
+        }
+
+        .cart-summary {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+        }
+
+        .summary-total {
+            border-top: 2px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .checkout-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .checkout-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Orders Styles */
+        .orders-list {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .order-card {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-card:last-child {
+            border-bottom: none;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-processing { background: #cce7ff; color: #004085; }
+        .status-out_for_delivery { background: #d1ecf1; color: #0c5460; }
+        .status-delivered { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .order-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .order-items {
+            margin-top: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Search and Filter */
+        .search-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-btn {
+            padding: 12px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid #ddd;
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background: var(--light);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-tabs {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .container {
+                margin: 150px auto 40px;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div class="header">
+    <div class="header-container">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <div class="logo-text">BookNest</div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="books">Browse Books</button>
+            <button class="nav-tab" data-tab="cart">Shopping Cart</button>
+            <button class="nav-tab" data-tab="orders">My Orders</button>
+        </div>
+
+        <div class="user-actions">
+            <div class="cart-icon" data-tab="cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+            <span>Welcome, <span id="userName">Customer</span></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Books Tab -->
+    <div id="books" class="tab-content active">
+        <div class="dashboard-header">
+            <h2>Discover Your Next Favorite Book</h2>
+            <p>Browse our extensive collection and find your next literary adventure</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalBooks">0</div>
+                <div class="stat-label">Books Available</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="cartItemsCount">0</div>
+                <div class="stat-label">Items in Cart</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="ordersCount">0</div>
+                <div class="stat-label">Your Orders</div>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search books by title, author, or genre..." class="search-input">
+                <button class="search-btn" onclick="searchBooks()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+            <div class="filter-options">
+                <select id="genreFilter" class="filter-select" onchange="filterBooks()">
+                    <option value="">All Genres</option>
+                </select>
+                <select id="sortBy" class="filter-select" onchange="filterBooks()">
+                    <option value="title">Sort by Title</option>
+                    <option value="price_low">Price: Low to High</option>
+                    <option value="price_high">Price: High to Low</option>
+                    <option value="author">Author</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="books-grid" id="booksGrid">
+            <!-- Books will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Cart Tab -->
+    <div id="cart" class="tab-content">
+        <div class="dashboard-header">
+            <h2>Shopping Cart</h2>
+            <p>Review your items and proceed to checkout</p>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be loaded here -->
+        </div>
+
+        <div class="cart-summary" id="cartSummary">
+            <!-- Cart summary will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Orders Tab -->
+    <div id="orders" class="tab-content">
+        <div class="dashboard-header">
+            <h2>Order History</h2>
+            <p>Track your orders and view order details</p>
+        </div>
+
+        <div class="orders-list" id="ordersList">
+            <!-- Orders will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Checkout Modal -->
+<div id="checkoutModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Checkout</h3>
+            <button class="close-modal" onclick="closeCheckoutModal()">&times;</button>
+        </div>
+        <form id="checkoutForm">
+            <div class="form-group">
+                <label for="shippingAddress">Shipping Address</label>
+                <textarea id="shippingAddress" placeholder="Enter your complete shipping address..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="paymentMethod">Payment Method</label>
+                <select id="paymentMethod" required>
+                    <option value="">Select Payment Method</option>
+                    <option value="CREDIT_CARD">Credit Card</option>
+                    <option value="DEBIT_CARD">Debit Card</option>
+                    <option value="PAYPAL">PayPal</option>
+                    <option value="CASH_ON_DELIVERY">Cash on Delivery</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Order Summary</label>
+                <div id="checkoutSummary">
+                    <!-- Order summary will be displayed here -->
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-outline" onclick="closeCheckoutModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Place Order</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let currentUser = null;
+    let allBooks = [];
+    let cartItems = [];
+    let userOrders = [];
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuthentication();
+        setupEventListeners();
+    });
+
+    function checkAuthentication() {
+        fetch('/api/check-auth')
+            .then(response => response.json())
+            .then(data => {
+                if (!data.authenticated || data.user.role !== 'CUSTOMER') {
+                    window.location.href = '/customer-login.html';
+                } else {
+                    currentUser = data.user;
+                    document.getElementById('userName').textContent = data.user.firstName + ' ' + data.user.lastName;
+                    loadDashboardData();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.location.href = '/customer-login.html';
+            });
+    }
+
+    function setupEventListeners() {
+        // Tab navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+
+        // Cart icon click
+        document.querySelector('.cart-icon').addEventListener('click', function() {
+            switchTab('cart');
+        });
+
+        // Search on enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchBooks();
+            }
+        });
+    }
+
+    function switchTab(tabId) {
+        // Update active tab
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.getAttribute('data-tab') === tabId) {
+                tab.classList.add('active');
+            }
+        });
+
+        // Show active content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+
+        // Load data for the tab if needed
+        if (tabId === 'cart') {
+            loadCart();
+        } else if (tabId === 'orders') {
+            loadOrders();
+        }
+    }
+
+    function loadDashboardData() {
+        loadBooks();
+        loadCartSummary();
+        loadOrdersCount();
+        loadGenres();
+    }
+
+    function loadBooks() {
+        fetch('/api/books')
+            .then(response => response.json())
+            .then(books => {
+                allBooks = books;
+                document.getElementById('totalBooks').textContent = books.length;
+                displayBooks(books);
+            })
+            .catch(error => {
+                console.error('Error loading books:', error);
+                showMessage('Error loading books', 'error');
+            });
+    }
+
+    function displayBooks(books) {
+        const booksGrid = document.getElementById('booksGrid');
+
+        if (books.length === 0) {
+            booksGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📚</div>
+                        <h3>No books found</h3>
+                        <p>Try adjusting your search or filter criteria</p>
+                    </div>
+                `;
+            return;
+        }
+
+        booksGrid.innerHTML = books.map(book => `
+                <div class="book-card">
+                    <div class="book-image">
+                        ${book.imageUrl ?
+            `<img src="${book.imageUrl}" alt="${book.title}" style="width: 100%; height: 100%; object-fit: cover;">` :
+            '📚'
+        }
+                        <div class="book-stock">${book.stockQuantity} in stock</div>
+                    </div>
+                    <div class="book-info">
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-author">by ${book.author}</div>
+                        <div class="book-genre">${book.genre}</div>
+                        <div class="book-price">$${book.price}</div>
+                        <button class="add-to-cart"
+                                onclick="addToCart(${book.bookId})"
+                                ${book.stockQuantity === 0 ? 'disabled' : ''}>
+                            ${book.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function loadGenres() {
+        const genres = [...new Set(allBooks.map(book => book.genre))];
+        const genreFilter = document.getElementById('genreFilter');
+        genreFilter.innerHTML = '<option value="">All Genres</option>' +
+            genres.map(genre => `<option value="${genre}">${genre}</option>`).join('');
+    }
+
+    function searchBooks() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const genreFilter = document.getElementById('genreFilter').value;
+        const sortBy = document.getElementById('sortBy').value;
+
+        let filteredBooks = allBooks.filter(book =>
+            book.title.toLowerCase().includes(searchTerm) ||
+            book.author.toLowerCase().includes(searchTerm) ||
+            book.genre.toLowerCase().includes(searchTerm)
+        );
+
+        if (genreFilter) {
+            filteredBooks = filteredBooks.filter(book => book.genre === genreFilter);
+        }
+
+        // Sort books
+        filteredBooks.sort((a, b) => {
+            switch (sortBy) {
+                case 'price_low': return a.price - b.price;
+                case 'price_high': return b.price - a.price;
+                case 'author': return a.author.localeCompare(b.author);
+                default: return a.title.localeCompare(b.title);
+            }
+        });
+
+        displayBooks(filteredBooks);
+    }
+
+    function filterBooks() {
+        searchBooks();
+    }
+
+    function addToCart(bookId) {
+        fetch('/api/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                bookId: bookId,
+                quantity: 1
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage(data.message, 'success');
+                    loadCartSummary();
+                    // If on cart tab, refresh cart
+                    if (document.getElementById('cart').classList.contains('active')) {
+                        loadCart();
+                    }
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error adding to cart:', error);
+                showMessage('Error adding item to cart', 'error');
+            });
+    }
+
+    function loadCartSummary() {
+        fetch('/api/cart/summary')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('cartItemsCount').textContent = data.totalItems || 0;
+                    document.querySelector('.cart-count').textContent = data.totalItems || 0;
+                }
+            })
+            .catch(error => {
+                console.error('Error loading cart summary:', error);
+            });
+    }
+
+    function loadCart() {
+        fetch('/api/cart')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    cartItems = data.cartItems || [];
+                    displayCartItems(cartItems);
+                    displayCartSummary(data.summary);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading cart:', error);
+                showMessage('Error loading cart', 'error');
+            });
+    }
+
+    function displayCartItems(items) {
+        const cartItemsContainer = document.getElementById('cartItems');
+
+        if (items.length === 0) {
+            cartItemsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🛒</div>
+                        <h3>Your cart is empty</h3>
+                        <p>Add some books to get started!</p>
+                        <button class="btn btn-primary" onclick="switchTab('books')">Browse Books</button>
+                    </div>
+                `;
+            return;
+        }
+
+        cartItemsContainer.innerHTML = items.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        ${item.imageUrl ?
+            `<img src="${item.imageUrl}" alt="${item.bookTitle}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">` :
+            '📚'
+        }
+                    </div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-title">${item.bookTitle}</div>
+                        <div class="cart-item-author">by ${item.author}</div>
+                        <div class="cart-item-price">$${item.price} each</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateCartItem(${item.cartItemId}, ${item.quantity - 1})">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateCartItem(${item.cartItemId}, ${item.quantity + 1})">+</button>
+                        </div>
+                        <button class="remove-btn" onclick="removeFromCart(${item.cartItemId})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function displayCartSummary(summary) {
+        const cartSummaryContainer = document.getElementById('cartSummary');
+        cartSummaryContainer.innerHTML = `
+                <div class="summary-row">
+                    <span>Items:</span>
+                    <span>${summary.totalItems || 0}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>$${(summary.totalAmount || 0).toFixed(2)}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span>$5.00</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Total:</span>
+                    <span>$${((summary.totalAmount || 0) + 5).toFixed(2)}</span>
+                </div>
+                <button class="checkout-btn" onclick="openCheckoutModal()" ${summary.totalItems === 0 ? 'disabled' : ''}>
+                    Proceed to Checkout
+                </button>
+            `;
+    }
+
+    function updateCartItem(cartItemId, newQuantity) {
+        fetch('/api/cart/update', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                cartItemId: cartItemId,
+                quantity: newQuantity
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    loadCart();
+                    loadCartSummary();
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating cart item:', error);
+                showMessage('Error updating cart item', 'error');
+            });
+    }
+
+    function removeFromCart(cartItemId) {
+        fetch(`/api/cart/remove/${cartItemId}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage(data.message, 'success');
+                    loadCart();
+                    loadCartSummary();
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error removing from cart:', error);
+                showMessage('Error removing item from cart', 'error');
+            });
+    }
+
+    function openCheckoutModal() {
+        const modal = document.getElementById('checkoutModal');
+        const summary = document.getElementById('checkoutSummary');
+
+        // Display order summary in modal
+        const totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        summary.innerHTML = `
+                <div class="summary-row">
+                    <span>Items (${cartItems.length}):</span>
+                    <span>$${totalAmount.toFixed(2)}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span>$5.00</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Total:</span>
+                    <span>$${(totalAmount + 5).toFixed(2)}</span>
+                </div>
+            `;
+
+        modal.style.display = 'flex';
+    }
+
+    function closeCheckoutModal() {
+        document.getElementById('checkoutModal').style.display = 'none';
+        document.getElementById('checkoutForm').reset();
+    }
+
+    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const shippingAddress = document.getElementById('shippingAddress').value;
+        const paymentMethod = document.getElementById('paymentMethod').value;
+
+        fetch('/api/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                shippingAddress: shippingAddress,
+                paymentMethod: paymentMethod
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage('Order placed successfully!', 'success');
+                    closeCheckoutModal();
+                    loadCart();
+                    loadCartSummary();
+                    loadOrdersCount();
+                    // Switch to orders tab
+                    setTimeout(() => switchTab('orders'), 1000);
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error during checkout:', error);
+                showMessage('Error during checkout', 'error');
+            });
+    });
+
+    function loadOrders() {
+        fetch(`/api/orders/customer/${currentUser.userId}`)
+            .then(response => response.json())
+            .then(orders => {
+                userOrders = orders;
+                displayOrders(orders);
+            })
+            .catch(error => {
+                console.error('Error loading orders:', error);
+                showMessage('Error loading orders', 'error');
+            });
+    }
+
+    function loadOrdersCount() {
+        fetch(`/api/orders/customer/${currentUser.userId}`)
+            .then(response => response.json())
+            .then(orders => {
+                document.getElementById('ordersCount').textContent = orders.length;
+            })
+            .catch(error => {
+                console.error('Error loading orders count:', error);
+            });
+    }
+
+    function displayOrders(orders) {
+        const ordersList = document.getElementById('ordersList');
+
+        if (orders.length === 0) {
+            ordersList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <h3>No orders yet</h3>
+                        <p>Your order history will appear here</p>
+                        <button class="btn btn-primary" onclick="switchTab('books')">Start Shopping</button>
+                    </div>
+                `;
+            return;
+        }
+
+        ordersList.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">Order #${order.orderId}</div>
+                        <div class="order-status status-${order.status.toLowerCase()}">${order.status.replace('_', ' ')}</div>
+                    </div>
+                    <div class="order-details">
+                        <div class="order-detail">
+                            <span class="detail-label">Order Date</span>
+                            <span class="detail-value">${new Date(order.orderDate).toLocaleDateString()}</span>
+                        </div>
+                        <div class="order-detail">
+                            <span class="detail-label">Total Amount</span>
+                            <span class="detail-value">$${order.totalAmount}</span>
+                        </div>
+                        <div class="order-detail">
+                            <span class="detail-label">Payment Method</span>
+                            <span class="detail-value">${order.paymentMethod || 'Not specified'}</span>
+                        </div>
+                        <div class="order-detail">
+                            <span class="detail-label">Shipping Address</span>
+                            <span class="detail-value">${order.shippingAddress}</span>
+                        </div>
+                    </div>
+                    <div class="order-items">
+                        <div class="detail-label">Items:</div>
+                        ${order.orderItems ? order.orderItems.map(item => `
+                            <div class="order-item">
+                                <span>${item.quantity} x Book ID ${item.bookId}</span>
+                                <span>$${(item.unitPrice * item.quantity).toFixed(2)}</span>
+                            </div>
+                        `).join('') : '<div class="order-item">No items found</div>'}
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function showMessage(message, type) {
+        // Create toast notification
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#4CAF50' : '#f44336'};
+                color: white;
+                border-radius: 5px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 3000;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 3000);
+    }
+
+    function logout() {
+        window.location.href = '/api/logout';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('checkoutModal');
+        if (event.target === modal) {
+            closeCheckoutModal();
+        }
+    }
+</script>
+</body>
+</html>

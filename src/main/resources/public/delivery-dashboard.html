@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Dashboard - BookNest Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B7355;
+            --secondary: #2C5530;
+            --accent: #C19A6B;
+            --light: #F8F4E9;
+            --dark: #2D2A26;
+            --text: #3C3C3C;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Crimson Text', serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 20px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid #E8E0D0;
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .card-icon.primary { background: var(--primary); }
+        .card-icon.success { background: var(--success); }
+        .card-icon.warning { background: var(--warning); }
+        .card-icon.danger { background: var(--danger); }
+        .card-icon.info { background: var(--info); }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .card-subtitle {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .card-change {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .card-change.positive {
+            color: var(--success);
+        }
+
+        .card-change.negative {
+            color: var(--danger);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(139, 115, 85, 0.3);
+        }
+
+        .action-btn i {
+            font-size: 2rem;
+        }
+
+        .action-btn span {
+            font-weight: 600;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th,
+        .table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #E8E0D0;
+        }
+
+        .table th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .table tr:hover {
+            background: #F8F9FA;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.assigned {
+            background: #FFF3CD;
+            color: var(--warning);
+        }
+
+        .status-badge.in-progress {
+            background: #D1ECF1;
+            color: var(--info);
+        }
+
+        .status-badge.completed {
+            background: #D4EDDA;
+            color: var(--success);
+        }
+
+        .status-badge.cancelled {
+            background: #F8D7DA;
+            color: var(--danger);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 5% auto;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #DDD;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-content {
+                margin-top: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-truck"></i>
+                <span>Delivery Dashboard</span>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">D</div>
+                <span id="userName">Delivery Staff</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Stats -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon primary">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Assigned Deliveries</div>
+                        <div class="card-subtitle">Your current tasks</div>
+                    </div>
+                </div>
+                <div class="card-value" id="assignedDeliveries">0</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+3 new today</span>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Completed Today</div>
+                        <div class="card-subtitle">Successful deliveries</div>
+                    </div>
+                </div>
+                <div class="card-value" id="completedToday">0</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Great job!</span>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">In Progress</div>
+                        <div class="card-subtitle">Currently delivering</div>
+                    </div>
+                </div>
+                <div class="card-value" id="inProgress">0</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Keep it up!</span>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon info">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Rating</div>
+                        <div class="card-subtitle">Customer satisfaction</div>
+                    </div>
+                </div>
+                <div class="card-value" id="rating">4.8</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Excellent!</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2 class="section-title">
+                <i class="fas fa-bolt"></i>
+                Quick Actions
+            </h2>
+            <div class="actions-grid">
+                <button class="action-btn" onclick="viewMyDeliveries()">
+                    <i class="fas fa-list"></i>
+                    <span>My Deliveries</span>
+                </button>
+                <button class="action-btn" onclick="updateStatus()">
+                    <i class="fas fa-edit"></i>
+                    <span>Update Status</span>
+                </button>
+                <button class="action-btn" onclick="viewRoute()">
+                    <i class="fas fa-route"></i>
+                    <span>View Route</span>
+                </button>
+                <button class="action-btn" onclick="reportIssue()">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Report Issue</span>
+                </button>
+                <button class="action-btn" onclick="viewHistory()">
+                    <i class="fas fa-history"></i>
+                    <span>Delivery History</span>
+                </button>
+                <button class="action-btn" onclick="viewPerformance()">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Performance</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- My Deliveries Table -->
+        <div class="table-container">
+            <h2 class="section-title">
+                <i class="fas fa-truck"></i>
+                My Deliveries
+            </h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Address</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="deliveriesTableBody">
+                    <!-- Deliveries will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Delivery Status</h3>
+                <button class="close" onclick="closeModal('statusModal')">&times;</button>
+            </div>
+            <form id="statusForm">
+                <div class="form-group">
+                    <label for="deliveryId">Delivery Assignment ID</label>
+                    <input type="number" id="deliveryId" name="deliveryId" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="">Select Status</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
+                        <option value="DELIVERED">Delivered</option>
+                        <option value="FAILED">Failed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Add any delivery notes..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Status</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Complete Delivery Modal -->
+    <div id="completeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complete Delivery</h3>
+                <button class="close" onclick="closeModal('completeModal')">&times;</button>
+            </div>
+            <form id="completeForm">
+                <div class="form-group">
+                    <label for="completeDeliveryId">Delivery Assignment ID</label>
+                    <input type="number" id="completeDeliveryId" name="deliveryId" required>
+                </div>
+                <div class="form-group">
+                    <label for="deliveryNotes">Delivery Notes</label>
+                    <textarea id="deliveryNotes" name="deliveryNotes" rows="3" placeholder="Add delivery completion notes..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Complete Delivery</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let deliveries = [];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadDashboardData();
+            setupEventListeners();
+        });
+
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/check-auth');
+                const data = await response.json();
+                
+                if (data.authenticated && data.user.role === 'DELIVERY_STAFF') {
+                    currentUser = data.user;
+                    document.getElementById('userName').textContent = data.user.firstName + ' ' + data.user.lastName;
+                    document.getElementById('userAvatar').textContent = data.user.firstName.charAt(0);
+                } else {
+                    window.location.href = '/staff-login.html';
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '/staff-login.html';
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Load deliveries
+                const deliveriesResponse = await fetch('/api/delivery/assignments');
+                deliveries = await deliveriesResponse.json();
+                
+                // Calculate stats
+                const assigned = deliveries.filter(d => d.status === 'ASSIGNED').length;
+                const inProgress = deliveries.filter(d => d.status === 'IN_PROGRESS').length;
+                const completed = deliveries.filter(d => d.status === 'COMPLETED').length;
+                
+                document.getElementById('assignedDeliveries').textContent = assigned;
+                document.getElementById('inProgress').textContent = inProgress;
+                document.getElementById('completedToday').textContent = completed;
+                
+                loadDeliveriesTable();
+
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+            }
+        }
+
+        // Load deliveries table
+        function loadDeliveriesTable() {
+            const tbody = document.getElementById('deliveriesTableBody');
+            tbody.innerHTML = '';
+
+            deliveries.forEach(delivery => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>#${delivery.orderId}</td>
+                    <td>${delivery.customerName}</td>
+                    <td>${delivery.shippingAddress}</td>
+                    <td>$${delivery.totalAmount}</td>
+                    <td><span class="status-badge ${delivery.status.toLowerCase().replace('_', '-')}">${delivery.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="updateDeliveryStatus(${delivery.assignmentId})">Update</button>
+                        <button class="btn btn-sm btn-success" onclick="completeDelivery(${delivery.assignmentId})">Complete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('statusForm').addEventListener('submit', handleStatusUpdate);
+            document.getElementById('completeForm').addEventListener('submit', handleCompleteDelivery);
+        }
+
+        // Handle status update
+        async function handleStatusUpdate(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const statusData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(`/api/delivery/${statusData.deliveryId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        status: statusData.status,
+                        notes: statusData.notes
+                    })
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    alert('Status updated successfully!');
+                    closeModal('statusModal');
+                    e.target.reset();
+                    loadDashboardData();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Failed to update status:', error);
+                alert('Failed to update status');
+            }
+        }
+
+        // Handle complete delivery
+        async function handleCompleteDelivery(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const completeData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(`/api/delivery/${completeData.deliveryId}/complete`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        deliveryNotes: completeData.deliveryNotes
+                    })
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    alert('Delivery completed successfully!');
+                    closeModal('completeModal');
+                    e.target.reset();
+                    loadDashboardData();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Failed to complete delivery:', error);
+                alert('Failed to complete delivery');
+            }
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Action functions
+        function viewMyDeliveries() {
+            // Scroll to deliveries table
+            document.querySelector('.table-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateStatus() {
+            openModal('statusModal');
+        }
+
+        function updateDeliveryStatus(assignmentId) {
+            document.getElementById('deliveryId').value = assignmentId;
+            openModal('statusModal');
+        }
+
+        function completeDelivery(assignmentId) {
+            document.getElementById('completeDeliveryId').value = assignmentId;
+            openModal('completeModal');
+        }
+
+        function viewRoute() {
+            alert('Route planning feature coming soon!');
+        }
+
+        function reportIssue() {
+            alert('Issue reporting feature coming soon!');
+        }
+
+        function viewHistory() {
+            alert('Delivery history feature coming soon!');
+        }
+
+        function viewPerformance() {
+            alert('Performance analytics feature coming soon!');
+        }
+
+        function logout() {
+            fetch('/api/logout')
+            .then(() => {
+                window.location.href = '/customer-login.html';
+            });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - BookNest Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B7355;
+            --secondary: #2C5530;
+            --accent: #C19A6B;
+            --light: #F8F4E9;
+            --dark: #2D2A26;
+            --text: #3C3C3C;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.1), rgba(44, 85, 48, 0.1));
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Crimson Text', serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .register-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+
+        .register-logo {
+            margin-bottom: 30px;
+        }
+
+        .register-logo h1 {
+            font-size: 2.2rem;
+            color: var(--dark);
+        }
+
+        .register-logo p {
+            color: var(--text);
+            margin-top: 5px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: #f9f9f9;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(139, 115, 85, 0.3);
+        }
+
+        .register-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
+            padding: 12px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+        }
+
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .links {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .links a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        .role-switch {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .role-switch a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .role-switch a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-to-home:hover {
+            color: var(--secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .register-container {
+                padding: 40px 25px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+
+            .register-container {
+                padding: 30px 20px;
+            }
+
+            .register-logo h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="customer-login.html" class="back-to-home">
+        <i class="fas fa-arrow-left"></i> Back to Login
+    </a>
+
+    <div class="register-container">
+        <div class="register-logo">
+            <h1>BookNest</h1>
+            <p>Create Your Account</p>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <form id="registerForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" placeholder="10 digits">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <div class="password-toggle">
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <div class="password-toggle">
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</button>
+                </div>
+            </div>
+
+            <button type="submit" class="register-btn" id="registerBtn">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+
+        <div class="links">
+            <a href="customer-login.html">Already have an account?</a>
+            <a href="#">Forgot Password?</a>
+        </div>
+
+        <div class="role-switch">
+            <p>Are you staff? <a href="staff-register.html">Staff Registration</a></p>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = 'message ' + type;
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+        }
+
+        function hideMessage() {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'none';
+        }
+
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Basic validation
+            if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
+                showMessage('Please fill in all required fields', 'error');
+                return false;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showMessage('Please enter a valid email address', 'error');
+                return false;
+            }
+
+            // Phone validation (optional but if provided, should be 10 digits)
+            if (phone && !/^\d{10}$/.test(phone)) {
+                showMessage('Please enter a valid 10-digit phone number', 'error');
+                return false;
+            }
+
+            // Password validation
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters long', 'error');
+                return false;
+            }
+
+            // Confirm password
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            const registerBtn = document.getElementById('registerBtn');
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+
+            const formData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                username: document.getElementById('username').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                password: document.getElementById('password').value
+            };
+
+            fetch('/api/customer/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage(data.message, 'success');
+                    setTimeout(() => {
+                        window.location.href = '/customer-login.html';
+                    }, 2000);
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('An error occurred. Please try again.', 'error');
+            })
+            .finally(() => {
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+            });
+        });
+
+        // Real-time validation
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword && password !== confirmPassword) {
+                this.style.borderColor = '#e74c3c';
+            } else {
+                this.style.borderColor = '#e1e1e1';
+            }
+        });
+
+        document.getElementById('email').addEventListener('blur', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email && !emailRegex.test(email)) {
+                this.style.borderColor = '#e74c3c';
+            } else {
+                this.style.borderColor = '#e1e1e1';
+            }
+        });
+
+        document.getElementById('phone').addEventListener('blur', function() {
+            const phone = this.value;
+            
+            if (phone && !/^\d{10}$/.test(phone)) {
+                this.style.borderColor = '#e74c3c';
+            } else {
+                this.style.borderColor = '#e1e1e1';
+            }
+        });
+    </script>
+</body>
+</html>
