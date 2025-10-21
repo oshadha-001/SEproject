@@ -26,4 +26,19 @@ public class DeliveryStaff {
     public void setDeliveryZone(String deliveryZone) { this.deliveryZone = deliveryZone; }
     public int getDeliveriesCompleted() { return deliveriesCompleted; }
     public void setDeliveriesCompleted(int deliveriesCompleted) { this.deliveriesCompleted = deliveriesCompleted; }
+
+    public void setLicenseNumber(String licenseNumber) {
+    }
+
+    public void setStaffId(int staffId) {
+    }
+
+    public String getLicenseNumber() {
+
+        return "";
+    }
+
+    public boolean isActive() {
+        return false;
+    }
 }
