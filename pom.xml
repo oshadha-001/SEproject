@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+=======
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+>>>>>>> 73f95439d0111af60d63ae9bae9580019f8c2182
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.6</version>
+<<<<<<< HEAD
         <relativePath/>
     </parent>
 
@@ -30,18 +37,66 @@
         </dependency>
 
         <!-- Spring Boot Data JPA -->
+=======
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.gtp</groupId>
+    <artifactId>GTPproject</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>GTPproject</name>
+    <description>GTPproject</description>
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+    <developers>
+        <developer/>
+    </developers>
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+    <dependencies>
+>>>>>>> 73f95439d0111af60d63ae9bae9580019f8c2182
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+<<<<<<< HEAD
 
         <!-- MySQL Connector -->
+=======
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+        </dependency>
+
+        <!-- MySQL Database -->
+>>>>>>> 73f95439d0111af60d63ae9bae9580019f8c2182
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
+<<<<<<< HEAD
         <!-- Thymeleaf Template Engine -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -71,11 +126,21 @@
 
 
         <!-- Spring Boot Test -->
+=======
+>>>>>>> 73f95439d0111af60d63ae9bae9580019f8c2182
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+<<<<<<< HEAD
+=======
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+>>>>>>> 73f95439d0111af60d63ae9bae9580019f8c2182
     </dependencies>
 
     <build>
@@ -83,6 +148,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+<<<<<<< HEAD
                 <configuration>
                     <excludes>
                         <exclude>
@@ -91,6 +157,8 @@
                         </exclude>
                     </excludes>
                 </configuration>
+=======
+>>>>>>> 73f95439d0111af60d63ae9bae9580019f8c2182
             </plugin>
         </plugins>
     </build>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
@@ -304,4 +305,401 @@
 
 </body>
 
+=======
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookNest</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --primary: #8B7355;
+        --secondary: #2C5530;
+        --accent: #C19A6B;
+        --light: #F8F4E9;
+        --dark: #2D2A26;
+        --text: #3C3C3C;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--light);
+        color: var(--text);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    h1, h2, h3, h4, h5 {
+        font-family: 'Crimson Text', serif;
+        font-weight: 600;
+    }
+
+    /* Header */
+    header {
+        background: rgba(248, 244, 233, 0.95);
+        box-shadow: var(--shadow);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        padding: 10px 0;
+        transition: var(--transition);
+    }
+
+    .header-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        transition: var(--transition);
+    }
+
+    .logo-text {
+        font-size: 1.8rem;
+        color: var(--dark);
+        font-weight: 700;
+    }
+
+    .logo-text span {
+        color: var(--primary);
+    }
+
+    .navbar-toggle {
+        display: none;
+        font-size: 1.5rem;
+        color: var(--dark);
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    nav ul {
+        display: flex;
+        list-style: none;
+        gap: 25px;
+    }
+
+    nav a {
+        text-decoration: none;
+        color: var(--dark);
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: var(--transition);
+    }
+
+    nav a:hover {
+        color: var(--primary);
+    }
+
+    /* Cards */
+    .cards-wrapper {
+        max-width: 1200px;
+        margin: 100px auto 30px;
+        padding: 0 20px;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .card-custom {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+        width: 300px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+    }
+
+    .card-custom h4 {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+
+    .card-custom p {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .card-custom:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn {
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: var(--transition);
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-warning {
+        background: var(--accent);
+        color: var(--dark);
+    }
+
+    .btn-warning:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Footer */
+    footer {
+        background: var(--dark);
+        color: white;
+        padding: 40px 20px;
+        margin-top: auto;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin-bottom: 20px;
+    }
+
+    .footer-column h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: var(--light);
+    }
+
+    .footer-column h3:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 30px;
+        height: 2px;
+        background: var(--primary);
+    }
+
+    .footer-column p, .footer-column ul {
+        font-size: 0.9rem;
+    }
+
+    .footer-column ul {
+        list-style: none;
+    }
+
+    .footer-column ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer-column a {
+        color: #bbb;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: var(--transition);
+    }
+
+    .footer-column a:hover {
+        color: var(--accent);
+    }
+
+    .social-icons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .social-icons a {
+        width: 30px;
+        height: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: var(--transition);
+    }
+
+    .social-icons a:hover {
+        background: var(--primary);
+    }
+
+    .copyright {
+        text-align: center;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .header-container {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .navbar-toggle {
+            display: block;
+        }
+
+        nav ul {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        nav ul.active {
+            display: flex;
+        }
+
+        .cards-wrapper {
+            margin-top: 80px;
+            gap: 20px;
+        }
+
+        .card-custom {
+            width: 100%;
+            padding: 20px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .cards-wrapper {
+            margin-top: 60px;
+            padding: 0 10px;
+        }
+
+        .logo-text {
+            font-size: 1.6rem;
+        }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <div class="logo-icon"><i class="fas fa-book-open"></i></div>
+      <div class="logo-text">Book<span>Nest</span></div>
+    </div>
+    <button class="navbar-toggle" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+    <nav>
+      <ul id="nav-menu">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/}">Delivery-Tracking</a></li>
+        <li><a th:href="@{/}">Catalog</a></li>
+        <li><a th:href="@{/promotion}">Promotions</a></li>
+        <li><a th:href="@{/staff}">Staff</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="cards-wrapper">
+  <div class="card-custom">
+    <h4>⭐ Manage Promotions</h4>
+    <p>Add, view, and update staff promotions.</p>
+    <a th:href="@{/promotion}" class="btn btn-warning">Go to Promotions</a>
+  </div>
+  <div class="card-custom">
+    <h4>👥 Manage Staff</h4>
+    <p>Create, view, and manage staff records.</p>
+    <a th:href="@{/staff}" class="btn btn-warning">Go to Staff</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-column">
+      <h3>BookNest Online</h3>
+      <p>Your literary sanctuary.</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-goodreads"></i></a>
+      </div>
+    </div>
+    <div class="footer-column">
+      <h3>Explore</h3>
+      <ul>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> New Arrivals</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> Bestsellers</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Support</h3>
+      <ul>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> Help</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">&copy; 2025 BookNest Online. All rights reserved.</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function toggleMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      navMenu.classList.toggle('active');
+  }
+
+  window.addEventListener('scroll', function() {
+      const header = document.querySelector('header');
+      if (window.scrollY > 50) {
+          header.style.padding = '8px 0';
+          header.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.1)';
+      } else {
+          header.style.padding = '10px 0';
+          header.style.boxShadow = 'var(--shadow)';
+      }
+  });
+</script>
+</body>
+>>>>>>> 73f95439d0111af60d63ae9bae9580019f8c2182
 </html>

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head>
+    <title>Book Nest Lanka - Inventory Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6d98ba;
+            --accent-color: #ff9a76;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+        }
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] body {
+            background-color: #121212;
+            color: #e9ecef;
+        }
+
+        /* Logo and Branding */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: rotate(15deg);
+        }
+
+        .brand-name {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation */
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+            padding: 0.8rem 1rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255,255,255,0.85) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            margin: 0 2px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+            background-color: rgba(255,255,255,0.15);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-bottom: none;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            color: white;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card.bg-primary {
+            background: linear-gradient(135deg, #4a6fa5, #6d98ba) !important;
+        }
+
+        .stat-card.bg-warning {
+            background: linear-gradient(135deg, #ffc107, #ffdb70) !important;
+            color: #333;
+        }
+
+        .stat-card.bg-success {
+            background: linear-gradient(135deg, #28a745, #5cb85c) !important;
+        }
+
+        .stat-card.bg-info {
+            background: linear-gradient(135deg, #17a2b8, #5bc0de) !important;
+        }
+
+        .stat-card.bg-danger {
+            background: linear-gradient(135deg, #dc3545, #e57373) !important;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 10px rgba(74, 111, 165, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(74, 111, 165, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #5cb85c);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #ffdb70);
+            box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+            color: #333;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #e57373);
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+        }
+
+        /* Tables */
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 1rem;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(74, 111, 165, 0.05);
+            transform: scale(1.01);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(74, 111, 165, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(30deg);
+        }
+
+        /* Forms */
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e1e5eb;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 0.2rem rgba(74, 111, 165, 0.25);
+            border-color: var(--primary-color);
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e9ecef;
+            --card-bg: #1e1e1e;
+            --border-color: #444;
+            --navbar-bg: #0d1117;
+            --table-header-bg: #2d3748;
+            --table-header-color: #e9ecef;
+            --table-hover: #2d3748;
+        }
+
+        [data-theme="dark"] body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .card {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .form-control,
+        [data-theme="dark"] .form-select {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--border-color);
+        }
+
+        [data-theme="dark"] .table {
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .table thead th {
+            background-color: var(--table-header-bg);
+            color: var(--table-header-color);
+        }
+
+        [data-theme="dark"] .table tbody tr:hover {
+            background-color: var(--table-hover);
+        }
+
+        [data-theme="dark"] .alert {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        /* Theme Switcher */
+        .theme-switcher {
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-option {
+            padding: 5px 10px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-option.active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 1.5rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .brand-name {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body class="container mt-4">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark mb-4">
+    <div class="container-fluid">
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+            </div>
+            <span class="brand-name">Book Nest Lanka</span>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/inventory/dashboard">
+                        <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/inventory/add">
+                        <i class="fas fa-plus-circle me-1"></i> Add Book
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/inventory/low-stock">
+                        <i class="fas fa-exclamation-triangle me-1"></i> Low Stock Report
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <!-- Theme Switcher -->
+                <li class="nav-item">
+                    <div class="theme-switcher">
+                        <div class="theme-option active" data-theme="light">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div class="theme-option" data-theme="dark">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Dashboard Header -->
+<div class="dashboard-header fade-in">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="display-6 fw-bold">Inventory Management Dashboard</h1>
+            <p class="lead mb-0">Manage your book inventory with ease and efficiency</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="card bg-light bg-opacity-25 text-white border-0">
+                <div class="card-body py-2">
+                    <small>Last updated: <span th:text="${#dates.format(#dates.createNow(), 'MMM dd, yyyy HH:mm')}"></span></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alert Messages -->
+<div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show fade-in" role="alert">
+    <i class="fas fa-check-circle me-2"></i>
+    <span th:text="${successMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<div th:if="${warningMessage}" class="alert alert-warning alert-dismissible fade show fade-in delay-1" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    <span th:text="${warningMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show fade-in delay-2" role="alert">
+    <i class="fas fa-times-circle me-2"></i>
+    <span th:text="${errorMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card bg-primary fade-in">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">Total Books</h5>
+                    <h2 th:text="${totalBooks}" class="card-text">0</h2>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+            </div>
+            <div class="mt-2">
+                <small><i class="fas fa-arrow-up me-1"></i> 12% from last month</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-warning fade-in delay-1">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">Low Stock Items</h5>
+                    <h2 th:text="${lowStockBooks != null ? lowStockBooks.size() : 0}" class="card-text">0</h2>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            </div>
+            <div class="mt-2">
+                <small><i class="fas fa-bell me-1"></i> Needs attention</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-success fade-in delay-2">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">In Stock Items</h5>
+                    <h2 th:text="${totalBooks - (lowStockBooks != null ? lowStockBooks.size() : 0)}" class="card-text">0</h2>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+            <div class="mt-2">
+                <small><i class="fas fa-chart-line me-1"></i> Well stocked</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-info fade-in delay-3">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">Categories</h5>
+                    <h2 th:text="${categories != null ? categories.size() : 'N/A'}" class="card-text">N/A</h2>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+            </div>
+            <div class="mt-2">
+                <small><i class="fas fa-layer-group me-1"></i> Active categories</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Low Stock Alert Section -->
+<div th:if="${lowStockBooks != null and !lowStockBooks.isEmpty()}" class="alert alert-warning fade-in delay-1">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i> Low Stock Alerts</h4>
+            <p class="mb-0">The following items need immediate attention:</p>
+        </div>
+        <a href="/inventory/low-stock" class="btn btn-warning">
+            <i class="fas fa-chart-bar me-1"></i> View Full Report
+        </a>
+    </div>
+    <hr>
+    <div class="row">
+        <div th:each="book : ${lowStockBooks}" class="col-md-6 mb-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong th:text="${book.title}"></strong>
+                    <small class="text-muted">by <span th:text="${book.author}"></span></small>
+                    <br>
+                    <small>Stock: <span th:text="${book.quantity}"></span> | Min: <span th:text="${book.minStockLevel}"></span></small>
+                </div>
+                <a th:href="@{'/inventory/update-stock/' + ${book.id}}"
+                   class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-edit me-1"></i> Update Stock
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search and Actions -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card fade-in">
+            <div class="card-body">
+                <h6 class="card-title"><i class="fas fa-search me-2"></i>Search Books</h6>
+                <form th:action="@{/inventory/search}" method="get" class="row g-2">
+                    <div class="col-md-6">
+                        <input type="text" name="keyword" class="form-control"
+                               placeholder="Search by title, author, or ISBN..."
+                               th:value="${searchKeyword}">
+                    </div>
+                    <div class="col-md-4">
+                        <select name="category" class="form-select">
+                            <option value="">All Categories</option>
+                            <option th:each="cat : ${categories}"
+                                    th:value="${cat}"
+                                    th:text="${cat}"
+                                    th:selected="${searchCategory == cat}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-1"></i> Search
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Search Results Info -->
+                <div th:if="${searchKeyword != null or searchCategory != null}" class="mt-2">
+                    <small class="text-muted">
+                        <span th:if="${searchKeyword}">Search: "<strong th:text="${searchKeyword}"></strong>"</span>
+                        <span th:if="${searchCategory}"> | Category: "<strong th:text="${searchCategory}"></strong>"</span>
+                        | Found <strong th:text="${searchResultsCount}"></strong> results
+                        <a th:href="@{/inventory/clear-search}" class="btn btn-sm btn-outline-secondary ms-2">Clear Search</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="d-grid gap-2">
+            <a href="/inventory/add" class="btn btn-success fade-in delay-1">
+                <i class="fas fa-plus-circle me-1"></i> Add New Book
+            </a>
+            <a href="/inventory/low-stock" class="btn btn-warning fade-in delay-2">
+                <i class="fas fa-chart-bar me-1"></i> Stock Report
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Books Table -->
+<div class="card fade-in delay-3">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-book me-2"></i>All Books in Inventory</h5>
+            <span class="badge bg-light text-dark" th:text="'Total: ' + ${totalBooks}">Total: 0</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div th:if="${books != null and !books.isEmpty()}">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Min Level</th>
+                        <th>Stock Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="book : ${books}"
+                        th:classappend="${book.lowStock} ? 'table-warning' : ''">
+                        <td th:text="${book.id}"></td>
+                        <td>
+                            <strong th:text="${book.title}"></strong>
+                        </td>
+                        <td th:text="${book.author}"></td>
+                        <td>
+                            <code th:text="${book.isbn}"></code>
+                        </td>
+                        <td>
+                            <span th:if="${book.category}" th:text="${book.category}" class="badge bg-secondary"></span>
+                            <span th:unless="${book.category}" class="text-muted">-</span>
+                        </td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(book.price, 1, 2)}"></td>
+                        <td>
+                                <span th:class="${book.quantity <= 0} ? 'text-danger fw-bold' : ''"
+                                      th:text="${book.quantity}">
+                                </span>
+                        </td>
+                        <td th:text="${book.minStockLevel}"></td>
+                        <td>
+                            <span th:if="${book.quantity <= 0}" class="badge bg-danger">Out of Stock</span>
+                            <span th:if="${book.lowStock and book.quantity > 0}" class="badge bg-warning">Low Stock</span>
+                            <span th:if="${!book.lowStock and book.quantity > 0}" class="badge bg-success">In Stock</span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a th:href="@{'/inventory/update-stock/' + ${book.id}}"
+                                   class="btn btn-outline-primary"
+                                   title="Update Stock">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a th:href="@{'/inventory/edit/' + ${book.id}}"
+                                   class="btn btn-outline-secondary"
+                                   title="Edit Book">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a th:href="@{'/inventory/delete/' + ${book.id}}"
+                                   class="btn btn-outline-danger delete-btn"
+                                   title="Delete Book"
+                                   th:attr="data-book-title=${book.title}">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div th:if="${books == null or books.isEmpty()}" class="text-center py-5">
+            <div class="empty-state">
+                <h3 th:if="${searchKeyword != null}"><i class="fas fa-search me-2"></i>No Books Found</h3>
+                <h3 th:if="${searchKeyword == null}"><i class="fas fa-book me-2"></i>No Books in Inventory</h3>
+
+                <p class="text-muted" th:if="${searchKeyword != null}">
+                    No books found matching "<strong th:text="${searchKeyword}"></strong>".
+                    Try different search terms or <a th:href="@{/inventory/dashboard}">view all books</a>.
+                </p>
+                <p class="text-muted" th:if="${searchKeyword == null}">
+                    Your inventory is empty. Start by adding your first book!
+                </p>
+
+                <a href="/inventory/add" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i> Add New Book
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="text-center">
+    <div class="row align-items-center">
+        <div class="col-md-6 text-start">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-book"></i>
+                </div>
+                <span class="brand-name">Book Nest Lanka</span>
+            </div>
+        </div>
+        <div class="col-md-6 text-end">
+            <small>
+                © <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> Book Nest Lanka |
+                Inventory Management System
+            </small>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Theme Switcher Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load saved theme
+        const savedTheme = localStorage.getItem('preferred-theme') || 'light';
+        setTheme(savedTheme);
+
+        // Theme switcher event listeners
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                const theme = this.getAttribute('data-theme');
+                setTheme(theme);
+
+                // Update active state
+                document.querySelectorAll('.theme-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+
+        // Enhanced delete confirmation
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const bookTitle = this.getAttribute('data-book-title');
+                if (!confirm(`Are you sure you want to delete "${bookTitle}"? This action cannot be undone.`)) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Add animation to cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards for animation
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    });
+
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('preferred-theme', theme);
+
+        // Update all links to maintain theme
+        updateLinksWithTheme(theme);
+    }
+
+    function updateLinksWithTheme(theme) {
+        document.querySelectorAll('a:not(.theme-option)').forEach(link => {
+            const url = new URL(link.href, window.location.origin);
+            if (!url.searchParams.has('theme')) {
+                url.searchParams.set('theme', theme);
+                link.href = url.toString();
+            }
+        });
+    }
+</script>
+</body>
+</html>
