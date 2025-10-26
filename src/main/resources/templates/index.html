@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Marketing Manager - Online Bookstore</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        .hero-section {
+
+            padding: 60px 0;
+
+            color: white;
+
+            text-align: center;
+
+        }
+
+        .hero-title {
+
+            font-size: 3rem;
+
+            font-weight: bold;
+
+            margin-bottom: 20px;
+
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+
+        }
+
+        .hero-subtitle {
+
+            font-size: 1.3rem;
+
+            margin-bottom: 40px;
+
+        }
+
+        .feature-card {
+
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 30px;
+
+            margin: 20px 0;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+            transition: transform 0.3s, box-shadow 0.3s;
+
+            cursor: pointer;
+
+            height: 100%;
+
+        }
+
+        .feature-card:hover {
+
+            transform: translateY(-10px);
+
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+
+        }
+
+        .feature-icon {
+
+            font-size: 4rem;
+
+            margin-bottom: 20px;
+
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+        }
+
+        .feature-title {
+
+            font-size: 1.5rem;
+
+            font-weight: bold;
+
+            color: #333;
+
+            margin-bottom: 15px;
+
+        }
+
+        .feature-description {
+
+            color: #666;
+
+            font-size: 1rem;
+
+            line-height: 1.6;
+
+        }
+
+        .btn-feature {
+
+            margin-top: 20px;
+
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+            border: none;
+
+            padding: 12px 30px;
+
+            color: white;
+
+            border-radius: 25px;
+
+            font-weight: 600;
+
+            transition: transform 0.2s;
+
+        }
+
+        .btn-feature:hover {
+
+            transform: scale(1.05);
+
+            color: white;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="hero-section">
+
+    <div class="container">
+
+        <h1 class="hero-title">
+
+            <i class="fas fa-store"></i> Marketing Manager Dashboard
+
+        </h1>
+
+        <p class="hero-subtitle">Manage your bookstore's marketing campaigns, promotions, and analytics</p>
+
+
+
+        <!-- NEW: Customer Storefront Link -->
+
+        <div class="mt-4">
+
+            <a href="/storefront" class="btn btn-light btn-lg" style="border-radius: 50px; padding: 15px 40px; font-weight: 600;">
+
+                <i class="fas fa-shopping-cart"></i> View ongoing campaigns
+
+                <small class="d-block" style="font-size: 0.8rem; opacity: 0.9;">See how your campaigns appear to customers</small>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="container pb-5">
+
+    <div class="row">
+
+        <!-- Campaigns Feature -->
+
+        <div class="col-md-6 col-lg-3">
+
+            <div class="feature-card text-center">
+
+                <i class="fas fa-tags feature-icon"></i>
+
+                <h3 class="feature-title">Seasonal Campaigns</h3>
+
+                <p class="feature-description">
+
+                    Create and manage seasonal discount campaigns for special occasions like Black Friday, holidays, and more.
+
+                </p>
+
+                <a href="/campaigns" class="btn btn-feature">
+
+                    <i class="fas fa-arrow-right"></i> Manage Campaigns
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Banners Feature -->
+
+        <div class="col-md-6 col-lg-3">
+
+            <div class="feature-card text-center">
+
+                <i class="fas fa-rectangle-ad feature-icon"></i>
+
+                <h3 class="feature-title">Pop-ups & Banners</h3>
+
+                <p class="feature-description">
+
+                    Design and control pop-up ads and banner advertisements to grab customer attention effectively.
+
+                </p>
+
+                <a href="/banners" class="btn btn-feature">
+
+                    <i class="fas fa-arrow-right"></i> Manage Banners
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Promotions Feature -->
+
+        <div class="col-md-6 col-lg-3">
+
+            <div class="feature-card text-center">
+
+                <i class="fas fa-envelope feature-icon"></i>
+
+                <h3 class="feature-title">Email Promotions</h3>
+
+                <p class="feature-description">
+
+                    Compose and send promotional email campaigns to customers with exclusive deals and offers.
+
+                </p>
+
+                <a href="/promotions" class="btn btn-feature">
+
+                    <i class="fas fa-arrow-right"></i> Manage Promotions
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Analytics Feature -->
+
+        <div class="col-md-6 col-lg-3">
+
+            <div class="feature-card text-center">
+
+                <i class="fas fa-chart-line feature-icon"></i>
+
+                <h3 class="feature-title">Campaign Analytics</h3>
+
+                <p class="feature-description">
+
+                    View detailed performance reports including open rates, clicks, and campaign effectiveness metrics.
+
+                </p>
+
+                <a href="/analytics" class="btn btn-feature">
+
+                    <i class="fas fa-arrow-right"></i> View Analytics
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Banner Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .navbar-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .form-container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 700px; margin: 30px auto; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-dark navbar-custom mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/banners}">
+            <i class="fas fa-arrow-left"></i> Back to Banners
+        </a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="form-container">
+        <h2 class="mb-4">
+            <i class="fas fa-rectangle-ad text-primary"></i>
+            <span th:if="${banner.id == null}">Create New Banner</span>
+            <span th:if="${banner.id != null}">Edit Banner</span>
+        </h2>
+
+        <form th:action="@{/banners/save}" method="post">
+
+            <input type="hidden" name="id" th:value="${banner.id}">
+
+            <div class="mb-3">
+                <label for="title" class="form-label">Banner Title *</label>
+                <input type="text" class="form-control" id="title" name="title"
+                       th:value="${banner.title}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">Content *</label>
+                <textarea class="form-control" id="content" name="content"
+                          rows="3" required th:text="${banner.content}"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="type" class="form-label">Type *</label>
+                    <select class="form-select" id="type" name="type" required>
+                        <option value="">Select Type</option>
+                        <option value="POPUP" th:selected="${banner.type == 'POPUP'}">Pop-up</option>
+                        <option value="BANNER" th:selected="${banner.type == 'BANNER'}">Banner</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="position" class="form-label">Position *</label>
+                    <select class="form-select" id="position" name="position" required>
+                        <option value="">Select Position</option>
+                        <option value="TOP" th:selected="${banner.position == 'TOP'}">Top</option>
+                        <option value="BOTTOM" th:selected="${banner.position == 'BOTTOM'}">Bottom</option>
+                        <option value="CENTER" th:selected="${banner.position == 'CENTER'}">Center</option>
+                        <option value="SIDEBAR" th:selected="${banner.position == 'SIDEBAR'}">Sidebar</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="active" name="active"
+                       th:checked="${banner.active == null || banner.active}" value="true">
+                <label class="form-check-label" for="active">Active Banner</label>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a th:href="@{/banners}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Banner
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

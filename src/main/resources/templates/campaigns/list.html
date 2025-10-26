@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seasonal Campaigns - Marketing Manager</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .navbar-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .page-header { background: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+    .table-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* RESTORED BADGE COLORS */
+    .badge-active { background-color: #28a745; }
+    .badge-inactive { background-color: #dc3545; }
+
+    /* --- Custom Toggle Switch Styling --- */
+    .action-switch-container {
+      padding-left: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .campaign-toggle-switch {
+      width: 3.5em;
+      height: 1.5em;
+      cursor: pointer;
+      margin-left: 0;
+    }
+
+    /* Adjust vertical alignment in the table cells */
+    td {
+      vertical-align: middle;
+    }
+    /* Ensure the Status column text is centered if desired */
+    td:nth-child(7) {
+      text-align: center;
+    }
+
+    /* Professional Modal Styling (for toggle confirmation) */
+    .modal-header-custom-success { background-color: #d4edda; color: #155724; border-bottom: 1px solid #c3e6cb; }
+    .modal-header-custom-danger { background-color: #f8d7da; color: #721c24; border-bottom: 1px solid #f5c6cb; }
+    .btn-confirm-action { background-color: #764ba2; border-color: #764ba2; color: white; }
+    .btn-confirm-action:hover { background-color: #667eea; border-color: #667eea; color: white; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<nav class="navbar navbar-dark navbar-custom mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+    <span class="navbar-text text-white">
+        <i class="fas fa-tags"></i> Seasonal Campaigns
+    </span>
+  </div>
+</nav>
+
+<div class="container">
+  <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+
+  <div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h2><i class="fas fa-tags text-primary"></i> Seasonal Discount Campaigns</h2>
+        <p class="text-muted mb-0">Manage seasonal discounts and special offers</p>
+      </div>
+      <a href="/campaigns/new" class="btn btn-primary btn-lg">
+        <i class="fas fa-plus"></i> Create Campaign
+      </a>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="table table-hover">
+      <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Campaign Name</th>
+        <th>Type</th>
+        <th>Discount</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:if="${campaigns.isEmpty()}">
+        <td colspan="8" class="text-center text-muted">
+          <i class="fas fa-inbox fa-3x mb-3"></i>
+          <p>No campaigns found. Create your first campaign!</p>
+        </td>
+      </tr>
+      <tr th:each="campaign : ${campaigns}">
+        <td th:text="${campaign.id}"></td>
+        <td>
+          <strong th:text="${campaign.name}"></strong>
+          <br>
+          <small class="text-muted" th:text="${campaign.description}"></small>
+        </td>
+        <td><span class="badge bg-info" th:text="${campaign.campaignType}"></span></td>
+        <td>
+          <strong class="text-success" th:text="${campaign.discountPercentage} + '%'"></strong>
+        </td>
+        <td th:text="${#temporals.format(campaign.startDate, 'MMM dd, yyyy')}"></td>
+        <td th:text="${#temporals.format(campaign.endDate, 'MMM dd, yyyy')}"></td>
+
+        <td>
+          <span th:if="${campaign.active}" class="badge badge-active">Active</span>
+          <span th:unless="${campaign.active}" class="badge badge-inactive">Inactive</span>
+        </td>
+
+        <td>
+          <div class="btn-group" role="group">
+            <a th:href="@{/campaigns/view/{id}(id=${campaign.id})}"
+               class="btn btn-sm btn-info" title="View Details">
+              <i class="fas fa-eye"></i>
+            </a>
+            <a th:href="@{/campaigns/edit/{id}(id=${campaign.id})}"
+               class="btn btn-sm btn-warning" title="Edit">
+              <i class="fas fa-edit"></i>
+            </a>
+
+            <div class="form-check form-switch action-switch-container mx-2" title="Toggle Status">
+              <input
+                      class="form-check-input campaign-toggle-switch"
+                      type="checkbox"
+                      role="switch"
+                      th:id="'campaignToggle' + ${campaign.id}"
+                      th:checked="${campaign.active}"
+                      th:data-campaign-id="${campaign.id}"
+                      th:data-campaign-name="${campaign.name}"
+                      onclick="showConfirmationModal(this)"
+              >
+              <label class="form-check-label visually-hidden" th:for="'campaignToggle' + ${campaign.id}">Toggle Status</label>
+            </div>
+
+            <button type="button"
+                    th:attr="data-id=${campaign.id}, data-name=${campaign.name}"
+                    onclick="showDeleteConfirmation(this)"
+                    class="btn btn-sm btn-danger"
+                    title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" id="modalHeader">
+        <h5 class="modal-title" id="confirmationModalLabel"><i class="fas fa-exclamation-triangle"></i> Confirm Status Change</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="modalMessage"></p>
+        <p>Are you sure you want to proceed?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCancel">Cancel</button>
+        <button type="button" class="btn btn-confirm-action" id="btnConfirm">Confirm Action</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Global variable to store the original toggle element for the toggle confirmation
+  let currentToggleElement = null;
+
+  // --- 1. SWEETALERT2 DELETE CONFIRMATION ---
+  function showDeleteConfirmation(button) {
+    const itemId = button.getAttribute('data-id');
+    const itemName = button.getAttribute('data-name');
+    const deleteUrl = '/campaigns/delete/' + itemId;
+
+    Swal.fire({
+      title: 'Confirm Deletion?',
+      html: `You are about to delete the campaign: <strong>${itemName}</strong> (ID: ${itemId}).<br>This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545', // Red
+      cancelButtonColor: '#6c757d', // Gray
+      confirmButtonText: '<i class="fas fa-trash"></i> Yes, Delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = deleteUrl;
+      }
+    });
+  }
+
+  // --- 2. BOOTSTRAP MODAL TOGGLE CONFIRMATION (REMAINS) ---
+  function showConfirmationModal(toggleElement) {
+    const campaignId = toggleElement.getAttribute('data-campaign-id');
+    const campaignName = toggleElement.getAttribute('data-campaign-name');
+    const isChecked = toggleElement.checked;
+    const statusText = isChecked ? 'activate' : 'deactivate';
+
+    // Store the element globally so the confirm button can access it
+    currentToggleElement = toggleElement;
+
+    // Use Bootstrap modal instance
+    const myModalEl = document.getElementById('confirmationModal');
+    const myModal = new bootstrap.Modal(myModalEl);
+
+    // Update Modal Content
+    document.getElementById('modalMessage').innerHTML = `You are about to **${statusText}** the campaign: <strong>${campaignName}</strong> (ID: ${campaignId}).`;
+
+    // TEMPORARY FIX: Get modal elements manually
+    const modalHeader = myModalEl.querySelector('.modal-header');
+    const modalTitle = myModalEl.querySelector('.modal-title');
+    const btnConfirm = document.getElementById('btnConfirm');
+
+    // Style the modal based on the action
+    if (isChecked) {
+      // Activating (Success style)
+      modalHeader.className = 'modal-header modal-header-custom-success';
+      modalTitle.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Activation';
+      btnConfirm.textContent = 'Activate Campaign';
+      btnConfirm.className = 'btn btn-confirm-action btn-success'; // Adjust class for visual
+    } else {
+      // Deactivating (Warning/Danger style)
+      modalHeader.className = 'modal-header modal-header-custom-danger';
+      modalTitle.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Confirm Deactivation';
+      btnConfirm.textContent = 'Deactivate Campaign';
+      btnConfirm.className = 'btn btn-confirm-action btn-danger'; // Adjust class for visual
+    }
+
+    // Temporarily revert the state before showing the modal,
+    // so if the user cancels, it looks correct.
+    currentToggleElement.checked = !isChecked;
+
+    myModal.show();
+  }
+
+  // Event listener for the Confirm button inside the modal
+  document.getElementById('btnConfirm').addEventListener('click', function() {
+    if (currentToggleElement) {
+      const campaignId = currentToggleElement.getAttribute('data-campaign-id');
+      const myModal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+      myModal.hide();
+
+      // Proceed to the server-side toggle action
+      window.location.href = '/campaigns/toggle/' + campaignId;
+    }
+  });
+
+  // Event listener for the Cancel button or modal close
+  document.getElementById('confirmationModal').addEventListener('hidden.bs.modal', function() {
+    // If the user cancels or closes the modal, revert the switch state to what it was
+    if (currentToggleElement) {
+      // The switch was temporarily reverted in showConfirmationModal, so we flip it back to the new state
+      currentToggleElement.checked = !currentToggleElement.checked;
+      currentToggleElement = null; // Clear the global variable
+    }
+  });
+
+  // Event listener for the Cancel button or modal close
+  document.getElementById('confirmationModal').addEventListener('show.bs.modal', function() {
+    if (currentToggleElement) {
+      // Temporarily revert the state before showing the modal,
+      // so if the user cancels, it looks correct.
+      currentToggleElement.checked = !currentToggleElement.checked;
+    }
+  });
+</script>
+</body>
+</html>

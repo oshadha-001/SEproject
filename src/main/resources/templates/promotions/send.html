@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Promotion</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .navbar-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .send-container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 800px; margin: 30px auto; }
+        .preview-box { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 20px; margin-bottom: 20px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<nav class="navbar navbar-dark navbar-custom mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/promotions">
+            <i class="fas fa-arrow-left"></i> Back to Promotions
+        </a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="send-container">
+        <h2 class="mb-4">
+            <i class="fas fa-paper-plane text-success"></i> Send Email Promotion
+        </h2>
+
+        <div class="preview-box">
+            <h5><i class="fas fa-envelope-open-text"></i> Email Preview</h5>
+            <hr>
+            <p><strong>Subject:</strong> <span th:text="${promotion.subject}"></span></p>
+            <p><strong>Target Audience:</strong> <span th:text="${promotion.targetAudience}"></span></p>
+            <hr>
+            <p><strong>Content:</strong></p>
+            <p th:text="${promotion.content}" style="white-space: pre-wrap;"></p>
+
+            <div th:if="${promotion.discountCode != null}">
+                <hr>
+                <p><strong>Discount Code:</strong> <code th:text="${promotion.discountCode}"></code></p>
+                <p th:if="${promotion.discountPercentage != null}">
+                    <strong>Discount:</strong> <span th:text="${promotion.discountPercentage} + '%'"></span>
+                </p>
+            </div>
+        </div>
+
+        <form th:action="@{/promotions/send/{id}(id=${promotion.id})}" method="post" id="sendPromotionForm">
+            <div class="mb-3">
+                <label for="recipientEmails" class="form-label">Recipient Email Addresses *</label>
+                <textarea class="form-control" id="recipientEmails" name="recipientEmails"
+                          rows="5" required
+                          placeholder="Enter email addresses separated by commas&#10;Example: customer1@example.com, customer2@example.com, customer3@example.com"></textarea>
+                <div class="form-text">
+                    <i class="fas fa-info-circle"></i> Enter multiple email addresses separated by commas
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Warning:</strong> Once sent, this promotion cannot be edited or deleted.
+                Make sure all information is correct before sending.
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/promotions" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+
+                <button type="button" class="btn btn-success btn-lg" onclick="confirmAndSend()">
+                    <i class="fas fa-paper-plane"></i> Send Now
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Robust Email Validation Regex (A commonly used, good-enough client-side regex)
+    const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    // Function to check if a single email string is valid
+    function isValidEmail(email) {
+        return EMAIL_REGEX.test(email);
+    }
+
+    // Function to handle professional validation and SweetAlert confirmation
+    function confirmAndSend() {
+        const form = document.getElementById('sendPromotionForm');
+        const emailsInput = document.getElementById('recipientEmails');
+        const emailListRaw = emailsInput.value.trim();
+
+        // 1. Check for Empty Field (Still needed for "Please fill this" scenario)
+        if (!emailListRaw) {
+            Swal.fire({
+                title: 'Recipient Required!',
+                text: 'You must enter at least one recipient email address to launch the campaign.',
+                icon: 'error',
+                confirmButtonText: 'Correct Data',
+                confirmButtonColor: '#dc3545'
+            });
+            emailsInput.focus();
+            return;
+        }
+
+        // 2. Check for Invalid Email Formats
+        const emails = emailListRaw.split(',').map(email => email.trim()).filter(email => email.length > 0);
+        let invalidEmail = null;
+
+        for (const email of emails) {
+            if (!isValidEmail(email)) {
+                invalidEmail = email;
+                break; // Stop on the first invalid email found
+            }
+        }
+
+        if (invalidEmail) {
+            // Show professional SweetAlert error for invalid format
+            Swal.fire({
+                title: 'Invalid Email Format!',
+                html: `
+                    <p>The following email address is incorrectly formatted:</p>
+                    <p><strong><code class="text-danger">${invalidEmail}</code></strong></p>
+                    <p class="text-muted small mt-3">Please ensure all emails are correct and separated by commas.</p>
+                `,
+                icon: 'error',
+                confirmButtonText: 'Correct Data',
+                confirmButtonColor: '#dc3545'
+            });
+            emailsInput.focus();
+            return;
+        }
+
+        // 3. Professional SweetAlert Confirmation (If all validation passes)
+        Swal.fire({
+            title: 'Confirm Campaign Launch?',
+            html: `
+                <div class="text-center">
+                    <p class="mb-1">You are about to send this promotion to **${emails.length}** recipients.</p>
+                    <p class="text-danger mt-2 mb-0"><strong>This action is irreversible.</strong></p>
+                    <p class="text-muted small">The promotion status will be set to 'SENT'.</p>
+                </div>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-rocket"></i> Launch Campaign',
+            cancelButtonText: 'Review Further',
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the form only if the user confirms
+                form.submit();
+            }
+        });
+    }
+</script>
+</body>
+</html>
